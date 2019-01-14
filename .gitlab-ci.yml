@@ -1,18 +1,11 @@
 image: docker:stable
 
-# IIRC we use socket binding, if not, uncomment this:
-#variables:
-#  DOCKER_HOST: tcp://docker:2375/
-#  DOCKER_DRIVER: overlay2
-#
-#services:
-#  - docker:dind
-
 before_script:
   - docker info
 
 build:
   stage: build
   script:
-    - docker build -t soseth/python-ci-base:$CI_COMMIT_REF_NAME .
+    - 'DEBVERSION=$([[ $CI_COMMIT_REF_NAME = "master" ]] && echo "unstable" || echo $CI_COMMIT_REF_NAME)'
+    - docker build -t soseth/python-ci-base:$CI_COMMIT_REF_NAME --build-arg BRANCH=$DEBVERSION .
     - docker push soseth/python-ci-base:$CI_COMMIT_REF_NAME

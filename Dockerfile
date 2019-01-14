@@ -1,4 +1,5 @@
-FROM debian:unstable
+ARG BRANCH=unstable
+FROM debian:${BRANCH}
 
 ADD docker.gpg /
 RUN apt update && \
